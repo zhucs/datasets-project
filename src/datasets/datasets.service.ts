@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateDatasetDto } from './dto/create-dataset.dto';
 import { UpdateDatasetDto } from './dto/update-dataset.dto';
 import { Dataset } from './entities/dataset.entity';
+import { QAPair } from './entities/qapair.entity';
 
 @Injectable()
 export class DatasetsService {
@@ -11,17 +12,20 @@ export class DatasetsService {
     // Check if request asks to generate more QA-pairs
     if (reqBody.generate === true) {
       let QAPairs = dataset.QAPairs;
-      if (QAPairs.length === 0) {
-        console.log('ERROR: No documents found!');
+      if (reqBody.documentIDs.length === 0) {
+        throw new BadRequestException(
+          "Request set 'generate' to true, but provided no documents",
+        );
       }
-      for (const docID of reqBody.documentIds) {
+      console.log(QAPairs);
+      for (const docID of reqBody.documentIDs) {
         QAPairs = [...QAPairs, ...this.generateMoreQAPairs(docID)];
       }
     }
     console.log('Sending dataset to DB'); // Upload dataset onto DB:
     return { ...dataset };
   }
-  generateMoreQAPairs(docID) {
+  generateMoreQAPairs(docID): QAPair[] {
     console.log(
       `Generating more QA Pairs for dataset based on doc no. ${docID}... `,
     );
