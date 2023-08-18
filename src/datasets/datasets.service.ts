@@ -7,7 +7,7 @@ import { Dataset } from './entities/dataset.entity';
 export class DatasetsService {
   create(reqBody: CreateDatasetDto) {
     const datasetID = Math.random().toString();
-    const dataset = new Dataset(datasetID, [...reqBody.values]);
+    const dataset = new Dataset(datasetID, [...reqBody.QAPairs]);
     // Check if request asks to generate more QA-pairs
     if (reqBody.generate === true) {
       let QAPairs = dataset.QAPairs;

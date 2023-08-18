@@ -1,7 +1,7 @@
-import { QAPair } from '../entities/qapair.entity.ts';
+import { QAPair } from '../entities/qapair.entity';
 
 export class CreateDatasetDto {
-  values: QAPair[];
+  QAPairs: QAPair[];
   generate: boolean;
   documentIds: number[];
 }
